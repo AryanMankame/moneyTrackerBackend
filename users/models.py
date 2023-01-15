@@ -13,7 +13,7 @@ class Transaction(models.Model):
 class Pending(models.Model):
     name = models.CharField(max_length=32)
     amount = models.IntegerField()
-    date = models.DateField()
+    mobile = models.CharField(max_length=16)
     type = models.CharField(max_length=16)
     def __str__(self):
         return f"{self.id} {self.name}"

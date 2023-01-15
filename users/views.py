@@ -78,9 +78,29 @@ def add_transact(request):
 def show_pending(request):
     all_pending = []
     for i in Pending.objects.all():
-        all_pending.append({"id":i.id,"name":i.name,"amount":i.amount,"date":i.date,"type":i.type})
+        all_pending.append({"id":i.id,"name":i.name,"amount":i.amount,"mobile":i.mobile,"type":i.type})
     return JsonResponse({"resp":all_pending},status=200)
 @csrf_exempt
 def test(request):
     print(request.user)
     return JsonResponse({"resp":request.user.id},status=200)
+@csrf_exempt
+def add_pending(request):
+    if request.method == "POST":
+        res = json.loads(request.body.decode('UTF-8'))
+        name = res["name"]
+        amount = res["amount"]
+        mobile = res["mobile"]
+        type = res["type"]
+        t = Pending(name=name,amount=amount,mobile=mobile,type=type)
+        t.save()
+    return HttpResponse("Added pending")
+@csrf_exempt
+def del_pending(request,pend_id):
+    if len(Pending.objects.filter(id = pend_id)) == 0:
+        print(pend_id)
+        return "Empty Dataset"
+    else:
+        t = Pending.objects.filter(id = pend_id)
+        t.delete()
+        return HttpResponse("Deleted")
